@@ -8,7 +8,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
   pages: write
   id-token: write
 
@@ -26,14 +26,29 @@ jobs:
         with:
           node-version: "20"
 
-      - name: Update config with fork owner
+      - name: Personalize fork (first run only)
         run: |
+          OWNER="${{ github.repository_owner }}"
+          REPO="${{ github.repository }}"
+          PAGES_URL="https://${OWNER}.github.io/${REPO#*/}/"
+
+          # Update config.json with fork owner
           node -e "
             const fs = require('fs');
             const config = JSON.parse(fs.readFileSync('config.json', 'utf8'));
-            config.github_user = '${{ github.repository_owner }}';
+            config.github_user = '${OWNER}';
             fs.writeFileSync('config.json', JSON.stringify(config, null, 2) + '\n');
           "
+
+          # Update README live demo link if it still points to the template
+          if grep -q "roshkhatri.github.io/PersonalDashboard" README.md; then
+            sed -i "s|roshkhatri.github.io/PersonalDashboard|${OWNER}.github.io/${REPO#*/}|g" README.md
+            git config user.name "github-actions[bot]"
+            git config user.email "github-actions[bot]@users.noreply.github.com"
+            git add README.md config.json
+            git commit -m "Personalize dashboard for ${OWNER}" || true
+            git push || true
+          fi
 
       - name: Fetch PR data
         env:
