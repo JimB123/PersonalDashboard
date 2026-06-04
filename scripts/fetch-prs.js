@@ -127,14 +127,22 @@ async function main() {
   const reviewedBy = reviewedByItems.map(mapPR);
   const mentions = mentionItems.map(mapMention);
 
-  const assignedIssues = assignedIssueItems.map(mapMention);
-  const authoredIssues = authoredIssueItems.map(mapMention);
+  const assignedSet = new Set(assignedIssueItems.map((i) => i.html_url));
+  const authoredSet = new Set(authoredIssueItems.map((i) => i.html_url));
+  const allIssueItems = [...assignedIssueItems, ...authoredIssueItems];
   const issuesSeen = new Set();
-  const issues = [...assignedIssues, ...authoredIssues].filter((i) => {
-    if (issuesSeen.has(i.url)) return false;
-    issuesSeen.add(i.url);
-    return true;
-  });
+  const issues = allIssueItems
+    .filter((i) => {
+      if (issuesSeen.has(i.html_url)) return false;
+      issuesSeen.add(i.html_url);
+      return true;
+    })
+    .map((item) => {
+      const m = mapMention(item);
+      m.is_assigned = assignedSet.has(item.html_url);
+      m.is_authored = authoredSet.has(item.html_url);
+      return m;
+    });
 
   const repos = [
     ...new Set([...toReview, ...openPrs, ...closedPrs, ...reviewedBy, ...mentions, ...issues].map((pr) => pr.repo)),

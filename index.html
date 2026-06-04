@@ -231,6 +231,17 @@ body { background: var(--color-canvas-default); font-family: -apple-system, Blin
       <summary>Filter by repo</summary>
       <div class="repo-filter-body" id="repo-checkboxes-issues"></div>
     </details>
+    <span class="filter-label">Type</span>
+    <select class="filter-select" id="filter-issues-type">
+      <option value="">All</option>
+      <option value="assigned">Assigned to me</option>
+      <option value="authored">Opened by me</option>
+    </select>
+    <span class="filter-label">Sort</span>
+    <select class="filter-select" id="filter-issues-sort">
+      <option value="updated">Recently updated</option>
+      <option value="created">Newest</option>
+    </select>
   </div>
   <div class="pr-list" id="list-issues"></div>
 </div>
@@ -515,7 +526,15 @@ Promise.all([fetch("config.json").then(r => r.json()), fetch("data/prs.json").th
 
     const renderIssues = () => {
       const repos = getSelectedRepos("repo-checkboxes-issues");
+      const type = document.getElementById("filter-issues-type").value;
+      const sort = document.getElementById("filter-issues-sort").value;
       let filtered = (data.issues || []).filter(i => repos.has(i.repo));
+      if (type === "assigned") filtered = filtered.filter(i => i.is_assigned);
+      if (type === "authored") filtered = filtered.filter(i => i.is_authored);
+      filtered = [...filtered].sort((a, b) => {
+        if (sort === "created") return b.created.localeCompare(a.created);
+        return b.updated.localeCompare(a.updated);
+      });
       document.getElementById("list-issues").innerHTML = filtered.length
         ? filtered.map(renderIssue).join("")
         : `<div class="loading">No issues match the filter</div>`;
@@ -564,6 +583,8 @@ Promise.all([fetch("config.json").then(r => r.json()), fetch("data/prs.json").th
     document.getElementById("filter-review-sort").addEventListener("change", renderReview);
     document.getElementById("filter-open-sort").addEventListener("change", renderOpen);
     document.getElementById("filter-mentions-type").addEventListener("change", renderMentions);
+    document.getElementById("filter-issues-type").addEventListener("change", renderIssues);
+    document.getElementById("filter-issues-sort").addEventListener("change", renderIssues);
     document.getElementById("filter-reviewed-status").addEventListener("change", renderReviewed);
     document.getElementById("filter-reviewed-from").addEventListener("change", renderReviewed);
     document.getElementById("filter-reviewed-to").addEventListener("change", renderReviewed);

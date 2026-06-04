@@ -6636,7 +6636,9 @@
       "created": "2026-04-16",
       "updated": "2026-04-21",
       "is_pr": false,
-      "state": "open"
+      "state": "open",
+      "is_assigned": true,
+      "is_authored": true
     },
     {
       "title": "[NEW] Streaming Compression for RDB and Replication",
@@ -6648,7 +6650,9 @@
       "created": "2026-02-12",
       "updated": "2026-03-05",
       "is_pr": false,
-      "state": "open"
+      "state": "open",
+      "is_assigned": true,
+      "is_authored": false
     },
     {
       "title": "Update Github self hosted runners",
@@ -6660,7 +6664,9 @@
       "created": "2026-01-22",
       "updated": "2026-01-22",
       "is_pr": false,
-      "state": "open"
+      "state": "open",
+      "is_assigned": true,
+      "is_authored": true
     },
     {
       "title": "Avoid downloading dependencies during the build",
@@ -6672,7 +6678,9 @@
       "created": "2024-11-29",
       "updated": "2025-08-14",
       "is_pr": false,
-      "state": "open"
+      "state": "open",
+      "is_assigned": true,
+      "is_authored": false
     },
     {
       "title": "Display merge conflict resolution diffs for backport PRs",
@@ -6684,7 +6692,9 @@
       "created": "2026-06-03",
       "updated": "2026-06-03",
       "is_pr": false,
-      "state": "open"
+      "state": "open",
+      "is_assigned": false,
+      "is_authored": true
     },
     {
       "title": "[Performance] Potential regression of 25% from commandlog large-reply when using reply copy avoidance",
@@ -6696,7 +6706,9 @@
       "created": "2025-12-10",
       "updated": "2026-04-20",
       "is_pr": false,
-      "state": "open"
+      "state": "open",
+      "is_assigned": false,
+      "is_authored": true
     },
     {
       "title": "Add Valkey-Bundle to download page of the website.",
@@ -6708,7 +6720,9 @@
       "created": "2025-07-30",
       "updated": "2026-04-05",
       "is_pr": false,
-      "state": "open"
+      "state": "open",
+      "is_assigned": false,
+      "is_authored": true
     },
     {
       "title": "[BUG] Error building valkey-search 1.0.2 for alpine in valkey-bundle",
@@ -6720,7 +6734,9 @@
       "created": "2026-01-15",
       "updated": "2026-03-02",
       "is_pr": false,
-      "state": "open"
+      "state": "open",
+      "is_assigned": false,
+      "is_authored": true
     },
     {
       "title": "Detect and notify a performance regression.",
@@ -6732,7 +6748,9 @@
       "created": "2026-01-30",
       "updated": "2026-02-27",
       "is_pr": false,
-      "state": "open"
+      "state": "open",
+      "is_assigned": false,
+      "is_authored": true
     },
     {
       "title": "Add server config path for server launcher",
@@ -6744,7 +6762,9 @@
       "created": "2026-02-19",
       "updated": "2026-02-19",
       "is_pr": false,
-      "state": "open"
+      "state": "open",
+      "is_assigned": false,
+      "is_authored": true
     },
     {
       "title": "Support real-world workloads for version comparison",
@@ -6756,7 +6776,9 @@
       "created": "2026-02-17",
       "updated": "2026-02-17",
       "is_pr": false,
-      "state": "open"
+      "state": "open",
+      "is_assigned": false,
+      "is_authored": true
     },
     {
       "title": "New MPUBLISH command to publish multiple messages.",
@@ -6768,7 +6790,9 @@
       "created": "2024-05-21",
       "updated": "2026-02-16",
       "is_pr": false,
-      "state": "open"
+      "state": "open",
+      "is_assigned": false,
+      "is_authored": true
     },
     {
       "title": "Increase Valkey Bundle and Modules Adoption - Proposal",
@@ -6780,7 +6804,9 @@
       "created": "2025-09-27",
       "updated": "2026-02-12",
       "is_pr": false,
-      "state": "open"
+      "state": "open",
+      "is_assigned": false,
+      "is_authored": true
     },
     {
       "title": "Adding Support for Fedora-based images",
@@ -6792,7 +6818,9 @@
       "created": "2024-04-10",
       "updated": "2026-01-08",
       "is_pr": false,
-      "state": "open"
+      "state": "open",
+      "is_assigned": false,
+      "is_authored": true
     },
     {
       "title": "Valkey Benchmarking Tool – Project Roadmap",
@@ -6804,7 +6832,9 @@
       "created": "2025-08-07",
       "updated": "2026-01-06",
       "is_pr": false,
-      "state": "open"
+      "state": "open",
+      "is_assigned": false,
+      "is_authored": true
     },
     {
       "title": "Revert Simplify build",
@@ -6816,7 +6846,9 @@
       "created": "2025-12-16",
       "updated": "2025-12-16",
       "is_pr": false,
-      "state": "open"
+      "state": "open",
+      "is_assigned": false,
+      "is_authored": true
     },
     {
       "title": "Support Mixed reads and write workloads",
@@ -6828,7 +6860,9 @@
       "created": "2025-10-09",
       "updated": "2025-11-11",
       "is_pr": false,
-      "state": "open"
+      "state": "open",
+      "is_assigned": false,
+      "is_authored": true
     },
     {
       "title": "Integrate profiling tools (`perf`, `flamegraph.pl`) for deeper analysis",
@@ -6840,7 +6874,9 @@
       "created": "2025-10-09",
       "updated": "2025-11-11",
       "is_pr": false,
-      "state": "open"
+      "state": "open",
+      "is_assigned": false,
+      "is_authored": true
     },
     {
       "title": "Collect system-level telemetry during runs:",
@@ -6852,7 +6888,9 @@
       "created": "2025-10-09",
       "updated": "2025-11-11",
       "is_pr": false,
-      "state": "open"
+      "state": "open",
+      "is_assigned": false,
+      "is_authored": true
     },
     {
       "title": "Add Memory efficiency metrics",
@@ -6864,7 +6902,9 @@
       "created": "2025-10-09",
       "updated": "2025-11-11",
       "is_pr": false,
-      "state": "open"
+      "state": "open",
+      "is_assigned": false,
+      "is_authored": true
     },
     {
       "title": "[NEW] Adding merge queue to unstable branch",
@@ -6876,7 +6916,9 @@
       "created": "2025-05-14",
       "updated": "2025-10-28",
       "is_pr": false,
-      "state": "open"
+      "state": "open",
+      "is_assigned": false,
+      "is_authored": true
     },
     {
       "title": "[NEW]Implement a configurable WF that helps to identify Flaky Tests",
@@ -6888,7 +6930,9 @@
       "created": "2025-10-24",
       "updated": "2025-10-28",
       "is_pr": false,
-      "state": "open"
+      "state": "open",
+      "is_assigned": false,
+      "is_authored": true
     },
     {
       "title": "Automate the files creation and upload to S3 Bucket.",
@@ -6900,7 +6944,9 @@
       "created": "2025-10-06",
       "updated": "2025-10-21",
       "is_pr": false,
-      "state": "open"
+      "state": "open",
+      "is_assigned": false,
+      "is_authored": true
     },
     {
       "title": "Floating file names for binary files like image tags",
@@ -6912,7 +6958,9 @@
       "created": "2025-10-18",
       "updated": "2025-10-18",
       "is_pr": false,
-      "state": "open"
+      "state": "open",
+      "is_assigned": false,
+      "is_authored": true
     },
     {
       "title": "Try pinning the individual iothreads to individual CPUs",
@@ -6924,7 +6972,9 @@
       "created": "2025-10-14",
       "updated": "2025-10-14",
       "is_pr": false,
-      "state": "open"
+      "state": "open",
+      "is_assigned": false,
+      "is_authored": true
     },
     {
       "title": "Highlight performance regressions per commit (unstable branch tracking)",
@@ -6936,7 +6986,9 @@
       "created": "2025-10-09",
       "updated": "2025-10-09",
       "is_pr": false,
-      "state": "open"
+      "state": "open",
+      "is_assigned": false,
+      "is_authored": true
     },
     {
       "title": "Tests for atomic slot migration",
@@ -6948,7 +7000,9 @@
       "created": "2025-09-10",
       "updated": "2025-10-08",
       "is_pr": false,
-      "state": "open"
+      "state": "open",
+      "is_assigned": false,
+      "is_authored": true
     },
     {
       "title": "Tests for atomic slot migration",
@@ -6960,7 +7014,9 @@
       "created": "2025-09-10",
       "updated": "2025-09-10",
       "is_pr": false,
-      "state": "open"
+      "state": "open",
+      "is_assigned": false,
+      "is_authored": true
     },
     {
       "title": "Add free_effort callback for valkey-json",
@@ -6972,7 +7028,9 @@
       "created": "2025-04-02",
       "updated": "2025-04-02",
       "is_pr": false,
-      "state": "open"
+      "state": "open",
+      "is_assigned": false,
+      "is_authored": true
     },
     {
       "title": "Explore looping for builds and loading of modules",
@@ -6984,7 +7042,9 @@
       "created": "2025-03-28",
       "updated": "2025-03-28",
       "is_pr": false,
-      "state": "open"
+      "state": "open",
+      "is_assigned": false,
+      "is_authored": true
     },
     {
       "title": "Updating website with Ubuntu 24.0 Noble support.",
@@ -6996,7 +7056,9 @@
       "created": "2024-11-22",
       "updated": "2025-01-23",
       "is_pr": false,
-      "state": "open"
+      "state": "open",
+      "is_assigned": false,
+      "is_authored": true
     },
     {
       "title": "Moving `artifact_source` to a global setting.",
@@ -7008,7 +7070,9 @@
       "created": "2024-09-12",
       "updated": "2024-10-03",
       "is_pr": false,
-      "state": "open"
+      "state": "open",
+      "is_assigned": false,
+      "is_authored": true
     }
   ],
   "repos": [
