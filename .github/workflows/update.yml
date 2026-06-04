@@ -26,13 +26,14 @@ jobs:
         with:
           node-version: "20"
 
-      - name: Personalize fork (first run only)
+      - name: Personalize for repo owner
         run: |
           OWNER="${{ github.repository_owner }}"
-          REPO="${{ github.repository }}"
-          PAGES_URL="https://${OWNER}.github.io/${REPO#*/}/"
+          REPO_NAME="${{ github.repository }}"
+          REPO_SHORT="${REPO_NAME#*/}"
+          PAGES_URL="https://${OWNER}.github.io/${REPO_SHORT}/"
 
-          # Update config.json with fork owner
+          # Update config.json
           node -e "
             const fs = require('fs');
             const config = JSON.parse(fs.readFileSync('config.json', 'utf8'));
@@ -40,15 +41,14 @@ jobs:
             fs.writeFileSync('config.json', JSON.stringify(config, null, 2) + '\n');
           "
 
-          # Update README live demo link if it still points to the template
-          if grep -q "roshkhatri.github.io/PersonalDashboard" README.md; then
-            sed -i "s|roshkhatri.github.io/PersonalDashboard|${OWNER}.github.io/${REPO#*/}|g" README.md
-            git config user.name "github-actions[bot]"
-            git config user.email "github-actions[bot]@users.noreply.github.com"
-            git add README.md config.json
-            git commit -m "Personalize dashboard for ${OWNER}" || true
-            git push || true
-          fi
+          # Update README live demo link
+          sed -i "s|\*\*Live demo\*\*:.*|**Live demo**: [${OWNER}.github.io/${REPO_SHORT}](${PAGES_URL})|" README.md
+
+          # Commit and push if anything changed
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git diff --cached --quiet || git commit -m "Update dashboard for ${OWNER}" && git push || true
 
       - name: Fetch PR data
         env:
