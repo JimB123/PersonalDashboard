@@ -26,16 +26,23 @@ Other features:
 
 ## Fork & Personalize
 
+> **Important**: You must enable GitHub Pages **before** the first workflow run, otherwise the deploy step will fail.
+
+### Setup (one-time, takes 30 seconds)
+
 1. Fork this repository
-2. Edit `config.json` — set your organization(s):
+2. Go to your fork's **Settings > Pages**
+3. Under "Source", select **GitHub Actions** (not "Deploy from a branch")
+4. Edit `config.json` — set your organization(s):
    ```json
    {
-     "orgs": ["your-org", "another-org"],
+     "orgs": ["your-org"],
      "title": "PR Dashboard"
    }
    ```
-3. Enable GitHub Pages (Settings > Pages > Source: **GitHub Actions**)
-4. Push — the workflow deploys your personalized dashboard automatically
+5. Push — the workflow deploys your personalized dashboard automatically
+
+That's it. Your dashboard will be live at `https://<username>.github.io/PersonalDashboard/`
 
 The GitHub username is auto-detected from the repository owner. The `github_user` field in `config.json` is only a fallback for local development.
 
