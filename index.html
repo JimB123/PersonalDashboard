@@ -480,8 +480,10 @@ function getSelectedRepos(containerId) {
 
 Promise.all([fetch("config.json").then(r => r.json()), fetch("data/prs.json").then(r => r.json())])
   .then(([config, data]) => {
-    document.getElementById("dashboard-title").innerHTML = `${escapeHtml(config.title)} <span class="org-badge">${escapeHtml(config.org)}</span>`;
-    document.title = `${config.title} - ${config.org}`;
+    const orgs = config.orgs || (config.org ? [config.org] : []);
+    const orgBadges = orgs.map(o => `<span class="org-badge">${escapeHtml(o)}</span>`).join(" ");
+    document.getElementById("dashboard-title").innerHTML = `${escapeHtml(config.title)} ${orgBadges}`;
+    document.title = `${config.title} - ${orgs.join(", ")}`;
     document.getElementById("subtitle").textContent = `@${data.github_user} • Updated ${data.updated}`;
     document.getElementById("count-review").textContent = data.counts.to_review;
     document.getElementById("count-open").textContent = data.counts.open;

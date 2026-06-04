@@ -7,7 +7,7 @@ const path = require("path");
 const configPath = path.join(__dirname, "..", "config.json");
 const config = JSON.parse(fs.readFileSync(configPath, "utf8"));
 const GITHUB_USER = process.env.DASHBOARD_USER || config.github_user;
-const ORG = config.org;
+const ORGS = config.orgs || (config.org ? [config.org] : []);
 const TOKEN = process.env.GITHUB_TOKEN || "";
 
 function request(url) {
@@ -85,51 +85,76 @@ function mapMention(item) {
   };
 }
 
-async function main() {
-  console.log("Fetching PRs awaiting review...");
+async function fetchForOrg(org) {
+  console.log(`\n[${org}] Fetching PRs awaiting review...`);
   const reviewItems = await searchAll(
-    `review-requested:${GITHUB_USER} is:pr is:open org:${ORG}`
+    `review-requested:${GITHUB_USER} is:pr is:open org:${org}`
   );
 
-  console.log("Fetching open PRs...");
+  console.log(`[${org}] Fetching open PRs...`);
   const openItems = await searchAll(
-    `author:${GITHUB_USER} is:pr is:open org:${ORG}`
+    `author:${GITHUB_USER} is:pr is:open org:${org}`
   );
 
-  console.log("Fetching closed PRs...");
+  console.log(`[${org}] Fetching closed PRs...`);
   const closedItems = await searchAll(
-    `author:${GITHUB_USER} is:pr is:closed org:${ORG}`
+    `author:${GITHUB_USER} is:pr is:closed org:${org}`
   );
 
-  console.log("Fetching PRs you reviewed...");
+  console.log(`[${org}] Fetching PRs you reviewed...`);
   const reviewedByItems = await searchAll(
-    `reviewed-by:${GITHUB_USER} is:pr is:closed org:${ORG} -author:${GITHUB_USER}`
+    `reviewed-by:${GITHUB_USER} is:pr is:closed org:${org} -author:${GITHUB_USER}`
   );
 
-  console.log("Fetching mentions...");
+  console.log(`[${org}] Fetching mentions...`);
   const mentionItems = await searchAll(
-    `mentions:${GITHUB_USER} is:open org:${ORG} -author:${GITHUB_USER}`
+    `mentions:${GITHUB_USER} is:open org:${org} -author:${GITHUB_USER}`
   );
 
-  console.log("Fetching assigned issues...");
+  console.log(`[${org}] Fetching assigned issues...`);
   const assignedIssueItems = await searchAll(
-    `assignee:${GITHUB_USER} is:issue is:open org:${ORG}`
+    `assignee:${GITHUB_USER} is:issue is:open org:${org}`
   );
 
-  console.log("Fetching authored issues...");
+  console.log(`[${org}] Fetching authored issues...`);
   const authoredIssueItems = await searchAll(
-    `author:${GITHUB_USER} is:issue is:open org:${ORG}`
+    `author:${GITHUB_USER} is:issue is:open org:${org}`
   );
 
-  const toReview = reviewItems.map(mapPR);
-  const openPrs = openItems.map(mapPR);
-  const closedPrs = closedItems.map(mapPR);
-  const reviewedBy = reviewedByItems.map(mapPR);
-  const mentions = mentionItems.map(mapMention);
+  return { reviewItems, openItems, closedItems, reviewedByItems, mentionItems, assignedIssueItems, authoredIssueItems };
+}
 
-  const assignedSet = new Set(assignedIssueItems.map((i) => i.html_url));
-  const authoredSet = new Set(authoredIssueItems.map((i) => i.html_url));
-  const allIssueItems = [...assignedIssueItems, ...authoredIssueItems];
+async function main() {
+  console.log(`Fetching data for ${ORGS.length} org(s): ${ORGS.join(", ")}`);
+
+  let allReviewItems = [];
+  let allOpenItems = [];
+  let allClosedItems = [];
+  let allReviewedByItems = [];
+  let allMentionItems = [];
+  let allAssignedIssueItems = [];
+  let allAuthoredIssueItems = [];
+
+  for (const org of ORGS) {
+    const result = await fetchForOrg(org);
+    allReviewItems.push(...result.reviewItems);
+    allOpenItems.push(...result.openItems);
+    allClosedItems.push(...result.closedItems);
+    allReviewedByItems.push(...result.reviewedByItems);
+    allMentionItems.push(...result.mentionItems);
+    allAssignedIssueItems.push(...result.assignedIssueItems);
+    allAuthoredIssueItems.push(...result.authoredIssueItems);
+  }
+
+  const toReview = allReviewItems.map(mapPR);
+  const openPrs = allOpenItems.map(mapPR);
+  const closedPrs = allClosedItems.map(mapPR);
+  const reviewedBy = allReviewedByItems.map(mapPR);
+  const mentions = allMentionItems.map(mapMention);
+
+  const assignedSet = new Set(allAssignedIssueItems.map((i) => i.html_url));
+  const authoredSet = new Set(allAuthoredIssueItems.map((i) => i.html_url));
+  const allIssueItems = [...allAssignedIssueItems, ...allAuthoredIssueItems];
   const issuesSeen = new Set();
   const issues = allIssueItems
     .filter((i) => {
@@ -150,6 +175,7 @@ async function main() {
 
   const data = {
     github_user: GITHUB_USER,
+    orgs: ORGS,
     updated: new Date().toISOString().slice(0, 10),
     to_review: toReview,
     open_prs: openPrs,
@@ -171,7 +197,7 @@ async function main() {
   const outPath = path.join(__dirname, "..", "data", "prs.json");
   fs.writeFileSync(outPath, JSON.stringify(data, null, 2));
   console.log(
-    `Done. ${data.counts.to_review} to review, ${data.counts.open} open, ${data.counts.closed} closed, ${data.counts.mentions} mentions. Written to data/prs.json`
+    `\nDone. ${data.counts.to_review} to review, ${data.counts.open} open, ${data.counts.closed} closed, ${data.counts.reviewed_by} reviewed, ${data.counts.mentions} mentions, ${data.counts.issues} issues. Written to data/prs.json`
   );
 }
 

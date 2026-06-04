@@ -1,6 +1,6 @@
 # Personal PR Dashboard
 
-A GitHub Pages dashboard for tracking your pull requests and issues across a GitHub organization.
+A GitHub Pages dashboard for tracking your pull requests and issues across one or more GitHub organizations.
 
 **Live demo**: [roshkhatri.github.io/PersonalDashboard](https://roshkhatri.github.io/PersonalDashboard/)
 
@@ -27,10 +27,10 @@ Other features:
 ## Fork & Personalize
 
 1. Fork this repository
-2. Edit `config.json` — change `org` to your target organization:
+2. Edit `config.json` — set your organization(s):
    ```json
    {
-     "org": "your-org",
+     "orgs": ["your-org", "another-org"],
      "title": "PR Dashboard"
    }
    ```
@@ -38,6 +38,8 @@ Other features:
 4. Push — the workflow deploys your personalized dashboard automatically
 
 The GitHub username is auto-detected from the repository owner. The `github_user` field in `config.json` is only a fallback for local development.
+
+Multiple orgs are fully supported — data from all orgs is merged into a single view.
 
 ## How It Works
 
@@ -69,4 +71,4 @@ GITHUB_TOKEN=$(gh auth token) node scripts/fetch-prs.js
 
 ## License
 
-MIT
+BSD 3-Clause License. See [LICENSE](LICENSE).
