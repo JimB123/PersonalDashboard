@@ -41,8 +41,8 @@ jobs:
             fs.writeFileSync('config.json', JSON.stringify(config, null, 2) + '\n');
           "
 
-          # Update README live demo link
-          sed -i "s|\*\*Live demo\*\*:.*|**Live demo**: [${OWNER}.github.io/${REPO_SHORT}](${PAGES_URL})|" README.md
+          # Update README dashboard link
+          sed -i "s|\*\*PR Dashboard\*\*:.*|**PR Dashboard**: [${OWNER}.github.io/${REPO_SHORT}](${PAGES_URL})|" README.md
 
           # Commit and push if anything changed
           git config user.name "github-actions[bot]"
