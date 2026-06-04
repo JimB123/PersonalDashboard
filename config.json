@@ -1,5 +1,7 @@
 {
   "github_user": "roshkhatri",
-  "orgs": ["valkey-io"],
+  "orgs": [
+    "valkey-io"
+  ],
   "title": "PR Dashboard"
 }
