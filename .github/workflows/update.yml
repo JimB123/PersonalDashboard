@@ -26,6 +26,15 @@ jobs:
         with:
           node-version: "20"
 
+      - name: Update config with fork owner
+        run: |
+          node -e "
+            const fs = require('fs');
+            const config = JSON.parse(fs.readFileSync('config.json', 'utf8'));
+            config.github_user = '${{ github.repository_owner }}';
+            fs.writeFileSync('config.json', JSON.stringify(config, null, 2) + '\n');
+          "
+
       - name: Fetch PR data
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
