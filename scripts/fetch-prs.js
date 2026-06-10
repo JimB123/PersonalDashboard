@@ -189,11 +189,24 @@ function mapCommit(item) {
   };
 }
 
+function mapReviewComment(item) {
+  const user = item.user || {};
+  const path = item.path ? item.path.split("/").pop() : "";
+  const prefix = path ? `${path}: ` : "";
+  return {
+    author: user.login || "ghost",
+    avatar: user.avatar_url || "",
+    body: (prefix + (item.body || "")).slice(0, 200),
+    created_at: item.created_at,
+    type: "review-comment",
+  };
+}
+
 async function fetchActivity(pr) {
   const [org, repo] = pr.url.replace("https://github.com/", "").split("/");
   const base = `https://api.github.com/repos/${org}/${repo}`;
 
-  let commits = [], reviews = [], comments = [];
+  let commits = [], reviews = [], comments = [], reviewComments = [];
 
   try {
     const { body: c } = await request(`${base}/pulls/${pr.number}/commits?per_page=100`);
@@ -210,14 +223,20 @@ async function fetchActivity(pr) {
     comments = ic;
   } catch (e) { console.warn(`  Failed to fetch comments for #${pr.number}: ${e.message}`); }
 
+  try {
+    const { body: rc } = await request(`${base}/pulls/${pr.number}/comments?per_page=100`);
+    reviewComments = rc;
+  } catch (e) { console.warn(`  Failed to fetch review comments for #${pr.number}: ${e.message}`); }
+
   const last_push = commits.length > 0
     ? commits[commits.length - 1].commit?.committer?.date || commits[commits.length - 1].commit?.author?.date || ""
     : "";
 
   const activity = [
     ...commits.map(mapCommit),
-    ...reviews.filter(r => r.state !== "PENDING").map(mapReview),
+    ...reviews.filter(r => r.state !== "PENDING" && r.body && r.body.trim()).map(mapReview),
     ...comments.map(mapComment),
+    ...reviewComments.map(mapReviewComment),
   ].sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
 
   return { last_push, activity };
@@ -327,7 +346,7 @@ async function main() {
 
 // Allow importing for tests
 if (typeof module !== "undefined") {
-  module.exports = { mapPR, mapMention, mapComment, mapReview, mapCommit, fetchActivity, request, searchAll, sleep };
+  module.exports = { mapPR, mapMention, mapComment, mapReview, mapCommit, mapReviewComment, fetchActivity, request, searchAll, sleep };
 }
 
 if (require.main === module) {
