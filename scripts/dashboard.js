@@ -78,10 +78,13 @@ function getUnreadActivity(pr) {
 function renderActivityItem(item, isUnread) {
   const typeClass = `activity-type-${item.type}`;
   const label = item.type === "review" ? (item.state || "review").toLowerCase() : item.type;
+  const bodyText = (item.body && item.body.trim())
+    ? `${escapeHtml(item.author)}: ${escapeHtml(item.body)}`
+    : `${escapeHtml(item.author)}`;
   return `<div class="activity-item${isUnread ? " unread" : ""}">
     <img class="activity-avatar" src="${escapeAttr(item.avatar)}" alt="" loading="lazy">
     <span class="activity-type ${typeClass}">${label}</span>
-    <span class="activity-body">${escapeHtml(item.author)}: ${escapeHtml(item.body)}</span>
+    <span class="activity-body">${bodyText}</span>
     <span class="activity-time">${timeAgo(item.created_at)}</span>
   </div>`;
 }
@@ -106,17 +109,33 @@ function renderPR(pr, type, moveBtn) {
   let activitySection = "";
 
   if (hasActivity) {
-    const unread = getUnreadActivity(pr);
+    const actId = `activity-${pr.repo}-${pr.number}`;
+
+    // Find the most recent commit (= last push anchor)
+    const lastCommit = pr.activity.find(a => a.type === "commit");
+    const since = pr.last_push || (lastCommit ? lastCommit.created_at : pr.created);
+
+    // Activity after last push (reviews + comments, not commits)
+    const afterPush = pr.activity
+      .filter(a => a.type !== "commit" && a.created_at > since);
+
+    // Unread count uses read marker if available, else last_push
+    const unread = getUnreadActivity(pr).filter(a => a.type !== "commit");
     unreadBadge = unread.length > 0
       ? `<span class="pr-badge badge-unread">${unread.length} new</span>`
       : "";
-    const actId = `activity-${pr.repo}-${pr.number}`;
-    // Show only unread items (since last push/read marker), filter empty bodies
-    const visibleItems = (unread.length > 0 ? unread : pr.activity)
-      .filter(a => a.body && a.body.trim())
-      .slice(0, 10);
-    if (visibleItems.length > 0) {
-      const items = visibleItems.map(a =>
+
+    // Build visible list: last commit + non-commit activity after it
+    const visibleItems = [];
+    if (lastCommit) visibleItems.push(lastCommit);
+    afterPush.forEach(a => visibleItems.push(a));
+
+    // Fallback: if nothing after push, show last 5 items
+    const displayItems = visibleItems.length > 1 ? visibleItems.slice(0, 10)
+      : pr.activity.slice(0, 5);
+
+    if (displayItems.length > 0) {
+      const items = displayItems.map(a =>
         renderActivityItem(a, unread.some(u => u.created_at === a.created_at))
       ).join("");
       activitySection = `
