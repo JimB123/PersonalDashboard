@@ -110,16 +110,21 @@ function renderPR(pr, type, moveBtn) {
     unreadBadge = unread.length > 0
       ? `<span class="pr-badge badge-unread">${unread.length} new</span>`
       : "";
-    const unreadTimes = new Set(unread.map(a => a.created_at));
     const actId = `activity-${pr.repo}-${pr.number}`;
-    const items = pr.activity.slice(0, 10).map(a =>
-      renderActivityItem(a, unreadTimes.has(a.created_at))
-    ).join("");
-    activitySection = `
-      <div class="activity-section" id="${actId}">
-        ${items}
-        <button class="mark-read-btn" data-url="${escapeAttr(pr.url)}" data-target="${actId}">✓ Mark read</button>
-      </div>`;
+    // Show only unread items (since last push/read marker), filter empty bodies
+    const visibleItems = (unread.length > 0 ? unread : pr.activity)
+      .filter(a => a.body && a.body.trim())
+      .slice(0, 10);
+    if (visibleItems.length > 0) {
+      const items = visibleItems.map(a =>
+        renderActivityItem(a, unread.some(u => u.created_at === a.created_at))
+      ).join("");
+      activitySection = `
+        <div class="activity-section" id="${actId}">
+          ${items}
+          <button class="mark-read-btn" data-url="${escapeAttr(pr.url)}" data-target="${actId}">✓ Mark read</button>
+        </div>`;
+    }
   }
 
   const toggleBtn = hasActivity
